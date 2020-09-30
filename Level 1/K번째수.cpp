@@ -1,25 +1,18 @@
-#include <string>
 #include <vector>
+#include <algorithm>
 
 using namespace std;
 
 vector<int> solution(vector<int> array, vector<vector<int>> commands) {
-    vector<int> answer, temp;
-    int tmp;
+    vector<int> answer;
+    vector<int> temp;
     
-    for (auto v : commands) {
-        for (int i = v[0] - 1; i != v[1]; i++)
+    for (const auto &vec : commands) {
+        for (decltype(array.size()) i = vec[0] - 1; i != vec[1]; ++i)
             temp.push_back(array[i]);
-        for (decltype(temp.size()) i = 0; i != temp.size(); i++)
-            for (decltype(temp.size()) j = 0; j != temp.size(); j++)
-                if (temp[i] < temp[j]) {
-                    tmp = temp[i];
-                    temp[i] = temp[j];
-                    temp[j] = tmp;
-                }
-        answer.push_back(temp[v[2] - 1]);
+        
+        sort(temp.begin(), temp.end());
+        answer.push_back(temp[vec[2] - 1]);
         temp.clear();
-    }
-    
-    return answer;
+    } return answer;
 }

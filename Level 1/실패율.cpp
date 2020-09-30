@@ -1,34 +1,23 @@
-#include <string>
 #include <vector>
+#include <algorithm>
 
 using namespace std;
 
 vector<int> solution(int N, vector<int> stages) {
-    vector<double> rate(N, 0.0);
+    vector<pair<double, int>> rates;
     vector<int> answer;
-    double cnt = 0.0, den = stages.size();
-    double max = -99.99;
-    decltype(rate.size()) index = 0;
+    int num = 0, den = stages.size();
     
-    for (auto i = 0; i != N; i++) {
-        for (decltype(stages.size()) j = 0; j != stages.size(); j++) {
-            if (stages[j] == i + 1) {
-                cnt++;
-            }
-        }
-        cnt ? rate[i] = cnt / den : 0.0;
-        den -= cnt;
-        cnt = 0.0;
+    for (int i = 1; i != N + 1; ++i) {
+        num = count_if(stages.begin(), stages.end(), [i](int N){return N <= i;});
+        rates.push_back(make_pair(static_cast<double>(stages.size() - num) / den, i));
+        den = stages.size() - num;
     }
     
-    for (decltype(rate.size()) i = 0; i != rate.size(); i++) {
-        for (decltype(rate.size()) j = 0; j != rate.size(); j++) {
-            if (max < rate[j]) {
-                max = rate[j];
-                index = j;
-            }
-        } answer.push_back(index + 1);
-        rate[index] = -99.99;
-        max = -99.99;
-    } return answer;
+    sort(rates.begin(), rates.end());
+    
+    for (const auto &iter : rates)
+        answer.push_back(iter.second);
+    
+    return answer;
 }

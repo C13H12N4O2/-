@@ -1,27 +1,20 @@
-#include <string>
 #include <vector>
 #include <algorithm>
+#include <set>
 
 using namespace std;
 
-bool find(vector<int> list, int n) {
-    for (auto beg = list.begin(); beg != list.end(); ++beg) {
-        if (*beg == n) {
-            return true;
-        }
-    } return false;
-}
-
 vector<int> solution(vector<int> numbers) {
     vector<int> answer;
+    set<int> tree;
+    sort(numbers.begin(), numbers.end());
     
-    for (decltype(numbers.size()) i = 0; i != numbers.size(); ++i) {
-        for (decltype(numbers.size()) j = i + 1; j != numbers.size(); ++j) {
-            int sum = numbers[i] + numbers[j];
-            if (!find(answer, sum)) {
-                answer.push_back(sum);
-            }
-        }
-    } sort(answer.begin(), answer.end());
+    for (decltype(numbers.size()) i = 0; i != numbers.size() - 1; ++i)
+        for (decltype(numbers.size()) j = i; j != numbers.size(); ++j)
+            if (i != j)
+                tree.emplace(numbers[i] + numbers[j]);
+    
+    for (const auto &i : tree)
+        answer.push_back(i);
     return answer;
 }
